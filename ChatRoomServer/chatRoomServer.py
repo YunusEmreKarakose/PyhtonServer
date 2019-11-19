@@ -57,6 +57,7 @@ while True:
     #   - reading - mesaj aldığımız soketler
     #   - writing - mesaj almaya uygun soketler
     #   - errors  - diğer durumdaki soketler
+    # aynı zamanda soketlerin birbirini bloklamasını engeller
     read_sockets, _, exception_sockets = select.select(sockets_list, [], sockets_list)
 
 

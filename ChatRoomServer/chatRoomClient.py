@@ -59,7 +59,7 @@ while True:
             message = client_socket.recv(message_length).decode('utf-8')
 
             print(f'{username} > {message}')
-
+            
     except IOError as e:
         #Hata durumları
         if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
