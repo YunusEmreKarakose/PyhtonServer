@@ -3,7 +3,8 @@ import socket
 MAX = 5
 # Create TCP/IpV4 socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+# Serverın aynı adresi tekrar kullanabilmesini sağlamak
+sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 
 # server
 server_address = ('localhost', 3000)
