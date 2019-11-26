@@ -116,15 +116,14 @@ while True:
 
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
             #gönderme koşulu için değişkenler
-            target=""
-            
+            target=""            
             tmp=message["data"].decode("utf-8").split('>')
+            # eğer > ibaresi ile bir hedef gösterilmemişse tmp sadece bir string içerir
             if len(tmp)>1:
                 target=tmp[0]
             # Diğer clientlara/hedef clienta alınan mesajı  yolla
             for client_socket in clients.keys():
                 cltTmp=clients[client_socket]
-                print(f"target {target.encode('utf-8')} ve {cltTmp['data']}")
                 # Hedefe ya da herkese yaynla
                 if cltTmp['data'].decode('utf-8') == target:
                     print("broadcasting to: ", cltTmp['data'].decode('utf-8'))
