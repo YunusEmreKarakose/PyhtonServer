@@ -104,13 +104,13 @@ def clientOps(keyboardInput):
             if target!="":
                 filename    =   my_username+"&"+target+".txt"
                 fileptr =open(filename,"a+")
-                fileptr.write(my_username+">"+target+">"+message)
+                fileptr.write(my_username+">"+target+">"+message+"\n")
                 fileptr.close()
             #herkese açık mesajları sakla
             else:
                 filename    =   my_username+"&all.txt"
                 fileptr =open(filename,"a+")
-                fileptr.write(my_username+">"+message)
+                fileptr.write(my_username+">"+message+"\n")
                 fileptr.close()
 
 
