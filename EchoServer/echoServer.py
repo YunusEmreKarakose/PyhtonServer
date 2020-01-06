@@ -8,7 +8,7 @@ sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 
 # server
 server_address = ('localhost', 3000)
-print("Server Calisiyor: %s:%d" % server_address)
+print("Server Running: %s:%d" % server_address)
 # Soketi ilişkilendirme bind()
 sock.bind(server_address)
 # Maksimum bağlantı sayısı ile dinlemeye başla
@@ -19,7 +19,7 @@ client, address = sock.accept()
 while True:
     data = client.recv(100)
     if data:
-        print("Clienttan gelen mesaj: %s" % data.decode('utf-8'))
-        answer = "Alınan mesajla("+str(data.decode('utf-8'))+ ") verilen cevap "
+        print("Message from Client %s" % data.decode('utf-8'))
+        answer = "Answer with recived message:::"+str(data.decode('utf-8'));
         client.send(answer.encode('utf-8'))
 client.close()
