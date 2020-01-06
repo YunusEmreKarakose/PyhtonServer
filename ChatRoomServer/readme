@@ -1,0 +1,16 @@
+Basic ChatRoom Example
+    Connected clients with using chatRoomClient.py have a problem.
+Clients cant see incoming messages till send message because receiving 
+messages blocking because of keyboard input(send message).
+
+    chatRoomClientRealtime.py clients doesnt have that problem. In chatRoomClientRealtime.py
+there is a method in a class allows async keyboard input(solution in asynckeyboardinpt.py).
+
+Usage:
+Before Start Server/client
+Check line 21-21 in chatRoomClientRealtime.py and line 6-7 in ChatRoomServer.py same
+1: Start Server(python ChatRoomServer.py)
+2: Start client/clients(python chatRoomClientRealtime.py)
+    send message
+3:Send a message entering console from client
+(Actions can be traceable in server console. Connections. messages ex.) 
