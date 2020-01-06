@@ -1,6 +1,6 @@
 import threading
 #https://stackoverflow.com/a/57387909
-
+#async keyboard input
 my_username = input("Username: ")
 
 class KeyboardThread(threading.Thread):
