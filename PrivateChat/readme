@@ -1,0 +1,14 @@
+Private/All ChatRoom Example
+Almost the same as ChatRoomServer. Only some if/else added.
+Conversations are store as txt file for each conversation client side.
+
+    
+
+Usage:
+Before Start Server/client
+Check line 21-21 in chatRoomClientRealtime.py and line 6-7 in ChatRoomServer.py same
+1: Start Server(python ChatRoomServer.py)
+2: Start client/clients(python chatRoomClientRealtime.py)
+3: For send private message to another client enter  "targetname>message" in sender client console.
+4:For see old messages with client or allchat enter "conversation>targetname or all" 
+(Actions can be traceable in server console. Connections. messages ex.) 

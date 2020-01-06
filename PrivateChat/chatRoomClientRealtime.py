@@ -55,9 +55,10 @@ def clientOps(keyboardInput):
     if len(tmp)>1:
         condition=tmp[0]
     #Durumlar
-    #1. Özel bir konuşma
+    #see old messages
+    #1. Private Message
     if condition=="conversation":
-        #bu durumda tmp[1] konuşma yapılan kişiyi belirtir (conservation>name)
+        #In this case tmp[1] is target (conservation>name)
         print("conversation",tmp[1])
         #all chat
         if tmp[1]=="all":
@@ -80,7 +81,7 @@ def clientOps(keyboardInput):
                 print(line)
             fileptr.close()
 
-    #mesaj yollamak
+    #Send message
     else:
         #
         message = keyboardInput
@@ -94,6 +95,7 @@ def clientOps(keyboardInput):
             #Yollanan mesajı kaydet
             #mesajı bytedan stringe geri çevir            
             message = message.decode('utf-8')
+            #store sending messages
             target=""            
             tmp=message.split('>')
             # eğer > ibaresi ile bir hedef gösterilmemişse tmp sadece bir string içerir
