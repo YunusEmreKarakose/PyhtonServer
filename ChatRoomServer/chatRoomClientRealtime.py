@@ -19,31 +19,31 @@ HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
 PORT = 1234
-# kullanıcı adını al
+# get username
 my_username = input("Username: ")
 
-# TCP/IPv4 soketi oluştur
+# Create TCP/IPv4 socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Servera bağlan
+# Connect server
 client_socket.connect((IP, PORT))
 
-# Set connection to non-blocking state, so .recv() call won;t block, just return some exception we'll handle
+# Set connection to non-blocking state,
 client_socket.setblocking(False)
 
-# Kullanıcı adını ve mesajı gönderme için hazırla
+# Create username+message
 username = my_username.encode('utf-8')
 username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
 client_socket.send(username_header + username)
-# mesaj gönderme fonku
+# send message func
 def send_message(msg):
-    # Kullanıcıdan mesaj almayı bekle
+    # input
     message = msg
 
-    # Mesaj boş değilse yolla
+    # if there is message send
     if message:
 
-        # Mesajı göndermek için byte haline getir ve yolla
+        # convert message to bytes and send
         message = message.encode('utf-8')
         message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
         client_socket.send(message_header + message)
@@ -55,8 +55,8 @@ while True:
     
     
 
-    try:
-        # Diğer kullanıcıları servera yolladığı mesajları alma
+    try:# Other users message
+        # Cant get messages until send message(user input blocking)
         while True:
 
             # Receive our "header" containing username length, it's size is defined and constant
@@ -70,10 +70,10 @@ while True:
             # Convert header to int value
             username_length = int(username_header.decode('utf-8').strip())
 
-            # Kullanıcı adını al ve bytedan stringe çevir
+            # get username and convert it from byte to sting
             username = client_socket.recv(username_length).decode('utf-8')
 
-            # Mesajı al ve bytedan stringe çevir
+            # get username and convert it from byte to sting
             message_header = client_socket.recv(HEADER_LENGTH)
             message_length = int(message_header.decode('utf-8').strip())
             message = client_socket.recv(message_length).decode('utf-8')

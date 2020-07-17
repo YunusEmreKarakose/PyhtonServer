@@ -6,41 +6,41 @@ HEADER_LENGTH = 10
 IP = "127.0.0.1"
 PORT = 1234
 
-# TCP/IPv4 Soketi oluştur
+#Create TCP/IPv4 Socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Set REUSEADDR (adresin tekrar kullanılabilmesi için)
+# Set REUSEADDR
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 #server
 server_address = (IP, PORT)
 # Bind server with ıp/port
 server_socket.bind(server_address)
-# Yeni bağlantıları dinle
+# Wait connections
 server_socket.listen()
 
-# Soket Listesi
+# Soket List
 sockets_list = [server_socket]
 
-# Bağlı Soket Listesi
+# Connected Soket List
 clients = {}
-#client isimleri
+
 print(f'Listening for connections on {IP}:{PORT}...')
 
-# Mesaj alma fonksiyonu
+# receive message func
 def receive_message(client_socket):
 
     try:
 
-        # Mesajı Al 
+        # get message 
         message_header = client_socket.recv(HEADER_LENGTH)
 
-        # Mesaj yoksa
+        # if there isnt a message
         if not len(message_header):
             return False
 
-        # Mesaj uzunluğu
+        # set message length
         message_length = int(message_header.decode('utf-8').strip())
 
-        # Mesajı obje olarak döndür
+        # return message as a object
         return {'header': message_header, 'data': client_socket.recv(message_length)}
 
     except:
@@ -61,70 +61,70 @@ while True:
     read_sockets, _, exception_sockets = select.select(sockets_list, [], sockets_list)
 
 
-    # Soket Listesindeki her soket için
+    # For each socket in Socket List
     for notified_socket in read_sockets:
 
-        # Yeni bağlantı kabul et
+        # New connection
         if notified_socket == server_socket:
 
-            # Kabul edilen bağlantı soketi ve adresi
+            # Accepted connection
             client_socket, client_address = server_socket.accept()
 
-            # Client ismini al
+            # Client 
             user = receive_message(client_socket)
 
-            # İsim yok is client isim yollamadan kapanmıştır
+            #
             if user is False:
                 continue
-            #aynı adda kullanıcı olmasını engelle
+            #dont allow users have same name
             i=0
             for elem in clients.keys():
                 tmp=clients[elem]
                 if tmp['data']==user['data']:
-                    print( "kullanıcı adı mevcut")
+                    print( "username taken")
                 else:
                     i=i+1
-            #kullanıcı adı mecvut değilse kabul et
+            #accept connection
             if(i==len(clients)):
                 print("yeni olustur")
-                # Kabul edilen bağlantıyı  select.select() listesine ekle
+                # Add in  select.select() list
                 sockets_list.append(client_socket)
-                # Client ismi ve başlığı
+                # Client
                 clients[client_socket] = user
                 print('Accepted new connection from {}:{}, username: {}'.format(*client_address, user['data'].decode('utf-8')))
 
-        # Var olan soket 
+        # Existed socket 
         else:
 
-            # Mesaj al
+            # Get message
             message = receive_message(notified_socket)
 
-            # Mesaj yoksa client kapandı
+            # 
             if message is False:
                 print('Closed connection from: {}'.format(clients[notified_socket]['data'].decode('utf-8')))
 
-                #  socket.socket() listesinden kaldır
+                # delete socket.socket() list
                 sockets_list.remove(notified_socket)
 
-                # Client listesinden kaldır
+                # remove Client list
                 del clients[notified_socket]
 
                 continue
 
-            # Mesajı kimin gönderdiğini kontrol et
+            # Check who is sending
             user = clients[notified_socket]
 
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
-            #gönderme koşulu için değişkenler
+            #Sending possibilities
             target=""            
             tmp=message["data"].decode("utf-8").split('>')
-            # eğer > ibaresi ile bir hedef gösterilmemişse tmp sadece bir string içerir
+            # if doesnt target didnt defined with  '>' tmp is single string
             if len(tmp)>1:
                 target=tmp[0]
-            # Diğer clientlara/hedef clienta alınan mesajı  yolla
+            # Send  clients or target client message
             for client_socket in clients.keys():
                 cltTmp=clients[client_socket]
-                # Hedefe ya da herkese yaynla
+                # clients or target 
                 if cltTmp['data'].decode('utf-8') == target:
                     print("broadcasting to: ", cltTmp['data'].decode('utf-8'))
                     client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])

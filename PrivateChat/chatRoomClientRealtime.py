@@ -31,30 +31,30 @@ HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
 PORT = 1234
-# kullanıcı adını al
+#Get username
 my_username = input("Username: ")
 
-# TCP/IPv4 soketi oluştur
+#create TCP/IPv4 socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Servera bağlan
+# connect server
 client_socket.connect((IP, PORT))
 
-# Set connection to non-blocking state, so .recv() call won;t block, just return some exception we'll handle
+# Set connection to non-blocking state, so .recv() call won;t block, 
 client_socket.setblocking(False)
 
-# Kullanıcı adını ve mesajı gönderme için hazırla
+# prepage username+message
 username = my_username.encode('utf-8')
 username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
 client_socket.send(username_header + username)
-# clientın yapabileceği işlemler
+# operations that clients can do
 def clientOps(keyboardInput):
     condition=""
     tmp=keyboardInput.split('>')
-    # eğer > ibaresi ile bir hedef gösterilmemişse tmp sadece bir string içerir
+    # if doesnt target didnt defined with  '>' tmp is single string
     if len(tmp)>1:
         condition=tmp[0]
-    #Durumlar
+    #operations
     #see old messages
     #1. Private Message
     if condition=="conversation":
@@ -85,30 +85,30 @@ def clientOps(keyboardInput):
     else:
         #
         message = keyboardInput
-        # Mesaj boş değilse yolla
+        # if there is message send
         if message:
 
-            # Mesajı göndermek için byte haline getir ve yolla
+            # convert message to bytes
             message = message.encode('utf-8')
             message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
             client_socket.send(message_header + message)
-            #Yollanan mesajı kaydet
-            #mesajı bytedan stringe geri çevir            
+            #save sending message
+            #convert message byte to string           
             message = message.decode('utf-8')
             #store sending messages
             target=""            
             tmp=message.split('>')
-            # eğer > ibaresi ile bir hedef gösterilmemişse tmp sadece bir string içerir
+            # if doesnt target didnt defined with  '>' tmp is single string
             if len(tmp)>1:
                 target=tmp[0]
-            #konuşmayı client tarafında sakla
-            #özel mesaj ise ayrı bir dosyada sakla
+            #store conversation client tarafında sakla
+            #private message
             if target!="":
                 filename    =   my_username+"&"+target+".txt"
                 fileptr =open(filename,"a+")
                 fileptr.write(my_username+">"+target+">"+message+"\n")
                 fileptr.close()
-            #herkese açık mesajları sakla
+            #all chat
             else:
                 filename    =   my_username+"&all.txt"
                 fileptr =open(filename,"a+")
@@ -123,7 +123,7 @@ while True:
     
 
     try:
-        # Diğer kullanıcıları servera yolladığı mesajları alma
+        # Get message
         while True:
 
             #
